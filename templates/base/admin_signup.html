@@ -1,0 +1,57 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <form action="{% url 'admin-signup-url' %}" method="post" class="card p-4 login-form">
+        {% csrf_token %}
+        <div class="card-header w-100">
+            <p class="text-center text-info">ADD ADMIN </p>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <label class="col-sm-12 col-md-6" for="fname">
+                    First name: <br>
+                    <input type="text" class="form-control" required name="fname" placeholder="First name">
+                </label>
+                <label class="col-sm-12 col-md-6" for="sname">
+                    Second name: <br>
+                    <input type="text" class="form-control" required name="sname" placeholder="Second name">
+                </label>
+                <label class="col-sm-12 col-md-6" for="lname">
+                    Last name: <br>
+                    <input type="text" class="form-control" required name="lname" placeholder="Last name">
+                </label>
+            </div>
+            <label for="email" class="w-100 p-2">
+                Email: <br>
+                <input class="form-control" type="email" required name="email" placeholder="Email">
+            </label> <br>
+            <label for="phone" class="w-100 p-2">
+                Phone Number: <br>
+                <input class="form-control" type="number" required name="phone" placeholder="Phone">
+            </label> <br>
+            <label for="username" class="w-100 p-2">
+                Username: <br>
+                <input class="form-control" type="text" required name="username" placeholder="Username">
+            </label> <br>
+            <label for="pf_number" class="w-100 p-2">
+                PF Number: <br>
+                <input class="form-control" type="text" required name="pf_number" placeholder="PF Number">
+            </label> <br>
+            <label for="password" class="w-100 p-2">
+                Password: <br>
+                <input class="form-control" type="text" required name="password" placeholder="Password">
+            </label>
+            <label for="department" class="w-100 p-2">
+                Department Assigned: <br>
+                <select name="department" id="department" required class="form-control">
+                    <option >---------</option>
+                    {% for department in departments %}
+                        <option value="{{ department.id }}">{{ department.department_name }}</option>
+                    {% endfor %}
+
+                </select>
+            </label> <br>
+            <input class="form-control btn btn-primary" type="submit" value="Add">
+        </div>
+
+    </form>
+{% endblock %}

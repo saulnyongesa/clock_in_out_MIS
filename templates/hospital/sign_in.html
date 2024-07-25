@@ -1,0 +1,43 @@
+{% extends 'hospital/base.html' %}
+{% block content %}
+    <form action="{% url 'hospital-sign-in-url' %}" method="post" class="sign-in-form card p-4 w-75 m-auto">
+        {% csrf_token %}
+        {#===============================Messages===================================#}
+        {% for message in messages %}
+            <p class="alert alert-dismissible alert-info text-center w-100 p-2">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <strong  {% if message.tags %} class="{{ message.tags }} "{% endif %}>
+                    {{ message }}
+                </strong>
+            </p>
+        {% endfor %}
+        <div class="card-header">
+            <p class="text-center text-secondary font-weight-bolder">CLINIC LOGIN</p>
+        </div>
+        <div class="card-body row">
+            <div class="bg-dark text-white col-sm-12 col-md-3 p-2 form-info">
+                <p class="text-justify text-capitalize">Welcome! You are about to log in as Clinic Admin Dashboard.</p>
+                <p class="text-justify text-capitalize"><span class="text-success font-weight-bolder">Don't have an account?</span> Contact the System
+                    <a href="https://www.facebook.com/bestsolutionproviders">Developer</a>.</p>
+                <p class="text-center">
+                    Forgot Password? <br>
+                    <a href="{% url 'reset_password' %}" class="btn btn-link">Reset password</a>
+                </p>
+
+            </div>
+
+            <div class="d-block col-sm-12 col-md-9">
+                <label for="username" class="w-100 p-2">
+                    Username: <br>
+                    <input class="form-control" type="text" required name="username" placeholder="Username">
+                </label> <br>
+                <label for="password" class="w-100 p-2">
+                    Password: <br>
+                    <input class="form-control" type="password" required name="password" placeholder="Password">
+                </label>
+                <input class="form-control btn btn-primary" type="submit" value="Proceed">
+            </div>
+        </div>
+
+    </form>
+{% endblock %}

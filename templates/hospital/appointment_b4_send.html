@@ -1,0 +1,22 @@
+{% extends 'hospital/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="card w-75 m-auto">
+        <div class="card-header">
+            <p class="text-center">Identification Page</p>
+            <p class="text-center text-capitalize">Identify yourself to Send An Appointment To Clinical Officer. </p>
+        </div>
+        <div class="card-body">
+            <div class="m-1 p-1 bg-secondary" style="border: 1px solid black; border-radius: 10px">
+                <form action="{% url 'hospital-dashboard-url' %}" method="post">
+                    {% csrf_token %}
+                    <label class="w-100">
+                        Enter Your ID/REG Number*
+                        <input type="text" name="input" class="form-control" required placeholder="ID/REG NUMBER">
+                    </label>
+                    <input class="btn btn-success" type="submit" value="Next">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

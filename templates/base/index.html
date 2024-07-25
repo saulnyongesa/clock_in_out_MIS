@@ -1,0 +1,63 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+    {% if request.user.is_superuser %} {#    System Admin #}
+            <div class="index-container w-75 row m-auto p-5">
+                <div class="col-md-4 col-sm-12 card" style="background-color: #721c24">
+                    <div class="card-header">
+                        <p class="text-center">Students</p>
+                    </div>
+                    <div class="card-body d-flex">
+                        <h1 class="m-auto">{{ students.count }}</h1>
+                        <a href="{% url 'student-signup-url' %}" class="m-auto d-flex btn btn-info">
+                            <img src="{% static 'sysimg/plus.svg' %}" alt="">
+                            ADD
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-12 card" style="background-color: #20c997">
+                    <div class="card-header">
+                        <p class="text-center">Trainers</p>
+                    </div>
+                    <div class="card-body d-flex">
+                        <h1 class="m-auto">{{ trainers.count }}</h1>
+                        <a href="{% url 'trainer-signup-url' %}" class="m-auto d-flex btn btn-info">
+                            <img src="{% static 'sysimg/plus.svg' %}" alt="">
+                            ADD
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="index-container w-75 row m-auto p-5">
+                <div class="col-md-4 col-sm-12 card" style="background-color: rgba(0,0,139,0.43)">
+                    <div class="card-header">
+                        <p class="text-center">Units</p>
+                    </div>
+                    <div class="card-body d-flex">
+                        <h1 class="m-auto">{{ units.count }}</h1>
+                        <a href="{% url 'unit-signup-url' %}" class="m-auto d-flex btn btn-info">
+                            <img src="{% static 'sysimg/plus.svg' %}" alt="">
+                            ADD
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-12 card" style="background-color: #086313">
+                    <div class="card-header">
+                        <p class="text-center">Admins</p>
+                    </div>
+                    <div class="card-body d-flex">
+                        <h1 class="m-auto">{{ admins.count }}</h1>
+                        <a href="{% url 'admin-signup-url' %}" class="m-auto d-flex btn btn-info">
+                            <img src="{% static 'sysimg/plus.svg' %}" alt="">
+                            ADD
+                        </a>
+                    </div>
+                </div>
+            </div>
+    {% else %} {#   Pharmacy Admin #}
+        <div class="w-100">
+            <h1 class="text-danger text-center p-3 bg-info">Not Allowed</h1>
+        </div>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,112 @@
+{% extends 'clock/clock_home_face.html' %}
+{% load static %}
+{% block content%}
+    <form action="{% url 'clock-in-face-url' trainer.id %}" method="post" class="card p-4 clock-form w-75 m-auto bg-dark">
+        {% csrf_token %}
+        <div class="card-header">
+            <p class="text-center text-info">CLOCK IN FOR A CLASS</p>
+        </div>
+        <div class="card-body row">
+            <div class="col-sm-12 col-md-6 d-block" style="border: 1px solid #ffffff">
+                <div class="d-flex">
+                    <img class="m-auto" src="{% static 'media/' %}{{ trainer.photo }}" alt="passport photo" style="border: 1px solid #ffffff; width: 100px; height: 100px">
+                </div>
+                <p class="text-center">YOUR NAME <br> <span class="text-danger">{{ trainer.name }}</span> </p>
+                <label for="unit" class="w-100">
+                    CHOOSE THE UNIT YOU ARE GOING TO TEACH* <br>
+                    <select class="form-control" onchange="getUnitInfo()" name="unit_id" id="unit" required>
+                        <option value="">--------</option>
+                        {% for unit in units %}
+                            <option class=""  value="{{ unit.id }}">{{ unit.unit_name }}---{{ unit.unit_code }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+
+                <div class="d-block w-100">
+                    <label for="pf_number" class="w-100 p-1">
+                        ID/PF NUMBER: <br>
+                        <input class="form-control" type="number" name="pf_number" placeholder="Enter Your ID/PF number" required>
+                    </label>
+                    <label for="pf_number" class="w-100 p-1 text-uppercase">
+                        Time Going To Take In Class (In Hours E.g. 2): <br>
+                        <input class="form-control" type="number" name="hours" placeholder="E.g. 2" required>
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6" style="border: 1px solid #ffffff">
+                <div class="w-100 p-1 m-auto bg-dar p-2" style="border-radius: 10px; background-color: rgb(19, 17, 17);">
+                    <p class="text-center text-white font-weight-bolder w-100">UNIT SUMMARY FOR THIS WEEK</p>
+                    <div id="before-summary" class="w-100 p-1 list-unstyled bg-dark d-block" style="border-radius: 10px;">
+                        <p class="text-danger text-center p-1">Select Unit To See Summary</p>
+                    </div>
+                    <ul id="summary" class="w-100 p-1 list-unstyled bg-dark d-none" style="border-radius: 10px;">
+                        <li class="p-1 w-100"><p class="text-white font-weight-bolder" >UNIT NAME: <span class="text-info font-weight-bolder" id="unit_name"></span></p></li>
+                        <li class="p-1 w-100"><p class="text-white font-weight-bolder" >UNIT CODE: <span class="text-info font-weight-bolder" id="unit_code"></span></p></li>
+                        <li class="p-1 w-100"><p class="text-white font-weight-bolder" >EXPECTED HOURS PER WEEK: <span class="text-info font-weight-bolder" id="expected_hours"></span></p>  </li>
+                        <li class="p-1 w-100"><p class="text-white font-weight-bolder" >HOURS COVERED THIS WEEK: <span class="text-info font-weight-bolder" id="hours_covered"></span></p>  </li>
+                        <li class="p-1 w-100"><p class="text-white font-weight-bolder" >HOURS PERCENTAGE: <h1 class="text-danger font-weight-bolder" id="percentage"></h1>
+                        </li>
+                        <li class="p-1 w-100"><p class="text-white font-weight-bolder" >REMAINING HOURS THIS WEEK: <span class="text-info font-weight-bolder" id="remaining_hours"></span></p>  </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer d-flex">
+            <input class="btn btn-success w-25 m-auto clock-in-btn" type="submit" value="Clock In">
+            <a href="{% url 'clock-face-url' %}" class="btn btn-danger w-25 m-auto">Cancel</a>
+        </div>
+    </form>
+    <script>
+        function getUnitInfo() {
+            const  before_summary= document.getElementById('before-summary')
+            const  summary= document.getElementById('summary')
+            const  unit_name= document.getElementById('unit_name')
+            const  unit_code= document.getElementById('unit_code')
+            const  expected_hours= document.getElementById('expected_hours')
+            const  hours_covered= document.getElementById('hours_covered')
+            const  percentage= document.getElementById('percentage')
+            const  remaining_hours= document.getElementById('remaining_hours')
+            const spinner = document.getElementById('spinner');
+            const unit_id = document.getElementById('unit').value
+            fetch('/clock/teaching/clock_in/unit_data/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ unit_id: unit_id, trainer_id: {{ trainer.id }} })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        spinner.style.display = 'none'
+                        unit_name.innerText = data.unit_name
+                        unit_code.innerText = data.unit_code
+                        expected_hours.innerText = data.expected_hours + " HRS"
+                        hours_covered.innerText = data.hours_covered
+                        percentage.innerText = data.percentage + " %"
+                        remaining_hours.innerText = data.remaining_hours + " HRS"
+                        summary.classList.remove('d-none')
+                        summary.classList.add('d-block')
+                        before_summary.classList.remove('d-block')
+                        before_summary.classList.add('d-none')
+                    } else {
+                        spinner.style.display = 'none'
+                        summary.classList.remove('d-block')
+                        summary.classList.add('d-none')
+                        before_summary.classList.remove('d-none')
+                        before_summary.classList.add('d-block')
+                        before_summary.innerText = "Unit Information Not Found"
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    summary.classList.remove('d-block')
+                    summary.classList.add('d-none')
+                    before_summary.classList.remove('d-none')
+                    before_summary.classList.add('d-block')
+                    before_summary.innerText = "Error Occurred While Fetching Unit Summary"
+                });
+        }
+    </script>
+{% endblock %}

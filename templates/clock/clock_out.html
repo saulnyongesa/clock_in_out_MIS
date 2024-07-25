@@ -1,0 +1,58 @@
+{% extends 'clock/clock_home_face.html' %}
+{% load static %}
+{% block content%}
+    <form action="{% url 'clock-out-face-url' details.id %}" method="post" class="card p-4 clock-form w-75 m-auto bg-dark" style="border: 2px solid black;">
+        {% csrf_token %}
+        <div class="card-header text-white p-2">
+            <p class="text-center text-danger font-weight-bolder text-uppercase">CLOCK OUT OF {{ details.trainer_unit.unit.unit_name }} CLASS</p>
+        </div>
+        <div class="card-body row text-white">
+            <div class="col-sm-12 col-md-6 p-2" style="border: 1px solid #ffffff">
+                <div class="d-flex">
+                    <img class="m-auto" src="{% static 'media/' %}{{ details.trainer_unit.trainer.photo }}" alt="Photo Not Found Visit ICT For Update!" style="border: 1px solid #ffffff; width: 100px; height: 100px">
+                </div>
+                <p class="text-center">YOUR NAME <br> <span class="text-danger">{{ details.trainer_unit.trainer.name }}</span> </p>
+                <div class="w-100 p-1 m-auto" style="border-radius: 10px; background-color: rgba(0,0,0,0.87);">
+                    <p class="text-center text-white font-weight-bolder w-100">CURRENT CLASS DETAILS</p>
+                    <ul class="w-100 p-1 list-unstyled bg-dark" style="border-radius: 10px;">
+                        <li class="p-1 w-100"><p class="text-white font-weight-bolder">CLOCK IN TIME: <span>{{ details.clock_in }}</span></p>  </li>
+                        <li class="p-1 w-100"><p class="text-white font-weight-bolder">TIME LAPSED: <span>{{ duration }} Minutes</span></p>  </li>
+                    </ul>
+                </div>
+                <div class="d-block w-100">
+                    <label for="roll" class="w-100 p-1">
+                        ROLL: <br>
+                        <input class="form-control" type="number" name="roll" placeholder="Enter Roll" required>
+                    </label>
+                </div>
+                <div class="d-block w-100">
+                    <label for="pf_number" class="w-100 p-1">
+                        ID/PF NUMBER: <br>
+                        <input class="form-control" type="number" name="pf_number" placeholder="Enter Your ID/PF number" required>
+                    </label>
+                </div>
+                <div class="card-footer d-flex">
+                    <input class="btn btn-success w-25 m-auto" type="submit" value="Clock Out">
+                    <a href="{% url 'clock-face-url' %}" class="btn btn-danger w-25 m-auto">Cancel</a>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 d-block text-white" style="border: 1px solid #ffffff">
+                <div class="w-100 p-1 m-auto bg-dar p-2" style="border-radius: 10px; background-color: rgb(19, 17, 17);">
+                    <p class="text-center text-white font-weight-bolder w-100">UNIT SUMMARY FOR THIS WEEK</p>
+                    <p class="text-white font-weight-bolder text-center">NOTE: This Class's Hours Not Included. Clockout To Include</p>
+                    <ul class="w-100 p-1 list-unstyled bg-dark" style="border-radius: 10px;">
+                        <li class="p-1 w-100"><p class="text-white font-weight-bolder">UNIT NAME: <span class="text-info font-weight-bolder">{{ details.trainer_unit.unit.unit_name }}</span></p></li>
+                        <li class="p-1 w-100"><p class="text-white font-weight-bolder">UNIT CODE: <span class="text-info font-weight-bolder">{{ details.trainer_unit.unit.unit_code }}</span></p></li>
+                        <li class="p-1 w-100"><p class="text-white font-weight-bolder">EXPECTED HOURS PER WEEK: <span class="text-info font-weight-bolder">{{ expected_hours_week }}</span></p>  </li>
+                        <li class="p-1 w-100"><p class="text-white font-weight-bolder">HOURS COVERED THIS WEEK: <span class="text-info font-weight-bolder">{{hours_covered_covered}}</span></p>  </li>
+                        <li class="p-1 w-100"><p class="text-white font-weight-bolder">HOURS PERCENTAGE: <h1 class="text-danger font-weight-bolder">{{percentage_hours_week}} %</h1>
+                        </li>
+                        <li class="p-1 w-100"><p class="text-white font-weight-bolder">REMAINING HOURS THIS WEEK: <span class="text-info font-weight-bolder">{{remaining_hours}}</span></p>  </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

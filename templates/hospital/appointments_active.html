@@ -1,0 +1,37 @@
+{% extends 'hospital/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="card w-75 m-auto">
+        <div class="card-header">
+            <p>Active Appointments</p>
+        </div>
+        <div class="card-body">
+            {% if active_appointments %}
+                {% for active_appointment in active_appointments %}
+                    <div class="m-1 p-1 bg-secondary" style="border: 1px solid black; border-radius: 10px">
+                        {% for student in students %}
+                            {% if active_appointment.sender == student.registration_number %}
+                                <p><a class="btn btn-link text-white font-weight-bolder" href="">{{ student.name }}</a></p>
+                                <p><a class="btn btn-link text-white font-weight-bolder" href="">Send Date: {{ active_appointment.updated.date }}</a></p>
+                                <p><a class="btn btn-link text-white font-weight-bolder" href="">Send Time: {{ active_appointment.updated.time }}</a></p>
+                            {% endif %}
+                        {% endfor %}
+                        {% for staff in staffs %}
+                            {% if active_appointment.sender == staff.id_number %}
+                                <p><a class="btn btn-link text-white font-weight-bolder" href="">{{ staff.name }}</a></p>
+                                <p><a class="btn btn-link text-white font-weight-bolder" href="">Send Date: {{ active_appointment.updated.date }}</a></p>
+                                <p><a class="btn btn-link text-white font-weight-bolder" href="">Send Time: {{ active_appointment.updated.time }}</a></p>
+                            {% endif %}
+                        {% endfor %}
+                        <p class="p-2 font-weight-bolder justify-content-start" style="background-color: rgba(0,0,0,0.85); border-radius: 10px">
+                            <a class="p1 text-white font-weight-bolder">{{ active_appointment.message }}</a>
+                        </p>
+                        <a href="{% url 'view-appointment-url' active_appointment.id %}" class="btn btn-info font-weight-bolder">Reply</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-center text-dark p-2">No Active Appointments</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

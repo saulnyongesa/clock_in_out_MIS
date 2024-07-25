@@ -1,0 +1,109 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+    <form action="{% url 'trainer-list-url' %}" class="card p-4 login-form w-75 m-auto" method="post">
+        {% csrf_token %}
+        <div class="card-header">
+            <p class="text-center text-info">TRAINERS</p>
+        </div>
+        <label class="w-100">
+            <select class="form-control" name="choice" id="choice" required>
+                {% if list_choice == 0 %}
+                    <option value="">All Trainers</option>
+                    <option value="1">Active Trainers</option>
+                    <option value="2">Inactive Trainers</option>
+                {% elif list_choice == 1 %}
+                    <option value="1">Active Trainers</option>
+                    <option value="0">All Trainers</option>
+                    <option value="2">Inactive Trainers</option>
+                {% elif list_choice == 1 %}
+                    <option value="2">Inactive Trainers</option>
+                    <option value="0">All Trainers</option>
+                    <option value="1">Active Trainers</option>
+                {% else %}
+                    <option value="0">All Trainers</option>
+                    <option value="1">Active Trainers</option>
+                    <option value="2">Inactive Trainers</option>
+                {% endif %}
+            </select>
+        </label>
+        <input class="form-control btn btn-primary"  type="submit" value="Generate">
+    </form>
+    <div class="p-3 w-100">
+
+    </div>
+    <div class="d-flex">
+        <a class="btn btn-link w-25 m-auto" href="{% url 'generate-pdf-url' %}">downloadPDF</a>
+        <!-- <button onclick="downloadPDF('mku-kitale-trainer-list', '')" class="btn btn-link w-25 m-auto">Download PDF</button> -->
+    </div>
+    <div class="card border w-100 m-auto" id="clock">
+        <div class="card-header bg-dark d-block">
+            <div class="w-100 d-flex">
+                <img class="w-50 m-auto" src="{% static 'sysimg/logo.png' %}" alt="">
+            </div>
+            <p class="text-center text-white text-uppercase font-weight-bolder">TRAINERS LIST</p>
+        </div>
+        <table class="card-body table table-bordered table-striped-custom">
+            <thead>
+            <tr>
+                <td class="font-weight-bolder">Name</td>
+                <td class="font-weight-bolder">PF Number</td>
+                <td class="font-weight-bolder">Phone Number</td>
+                <td class="font-weight-bolder">Email</td>
+                <td class="font-weight-bolder">Unit Teaching</td>
+                <td class="font-weight-bolder">Status(Active/Inactive)</td>
+                <td class="font-weight-bolder">Edit Button</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% if trainers %}
+                {% for trainer in trainers %}
+                    <tr class="" style="border: 2px solid black">
+                        <td class="text-capitalize">{{ trainer.name }}</td>
+                        <td class="text-capitalize">{{ trainer.pf_number}}</td>
+                        <td>{{ trainer.phone }}</td>
+                        <td>{{ trainer.email }}</td>
+                        <td class="text-capitalize d-block align-content-start">
+                            {% if trainer.is_active %}
+                                {% for unit in units %}
+                                    {% if unit.trainer == trainer %}
+                                        <div class="d-flex  w-100 p-1 m-1" style="border: 1px solid black">
+                                            <p class="m-auto">{{ unit.unit.unit_name }} ({{ unit.unit.unit_code }})</p>
+                                            <a class="m-auto btn btn-danger" href="{% url 'remove-assigned-unit-url' unit.id %}">Remove</a>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="d-flex w-100 pt-1 pb-1">
+                                    <a class="m-auto btn btn-primary" href="{% url 'assign-trainer-to-unit-from-list-url' trainer.id%}">Assign Unit</a>
+                                </div>
+                            {% else %}
+                                <p class="m-auto">Not an active trainer</p>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <div class="d-flex w-100 pt-1 pb-1">
+                                {% if trainer.is_active %}
+                                    <p class="m-auto text-success font-weight-bolder" >Active</p>
+                                    <a class="m-auto btn btn-danger" href="{% url 'trainer-status-url' trainer.id%}">Deactivate</a>
+                                {% else %}
+                                    <p class="m-auto text-danger font-weight-bolder" >Inactive</p>
+                                    <a class="m-auto btn btn-success" href="{% url 'trainer-status-url' trainer.id%}">Activate</a>
+                                {% endif %}
+
+                            </div>
+                        </td>
+                        <td>
+                            <a class="btn btn-link" href="{% url 'trainer-edit-url' trainer.id %}">Edit</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td class="text-center" colspan="7">No Trainers Found</td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

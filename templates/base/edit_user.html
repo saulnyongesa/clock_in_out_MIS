@@ -1,0 +1,14 @@
+{% extends 'base/base.html' %}
+{% load crispy_forms_filters %}
+{% block content %}
+    <form action="{% url 'edit-user-url' %}" method="post" class="card p-4 login-form">
+        {% csrf_token %}
+        <div class="card-header">
+            <p class="text-center text-info">EDIT {{ user.first_name }} {{ user.last_name }} DETAILS</p>
+        </div>
+        <div class="card-body">
+            {{ form|crispy }}
+            <input class="form-control btn btn-primary" type="submit" value="Save">
+        </div>
+    </form>
+{% endblock %}

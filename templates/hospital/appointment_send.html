@@ -1,0 +1,65 @@
+{% extends 'hospital/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="card w-75 m-auto">
+        <div class="card-header">
+            <p class="text-center">{{ sender.name }} You're About To Send An Appointment To The Doctor.</p>
+            <P class="text-center">Type Your Appointment Below. Please Be Brief</P>
+        </div>
+        <div class="card-body">
+            <div class="m-1 p-1 bg-secondary" style="border: 1px solid black; border-radius: 10px">
+                <form action="{% url 'send-appointment-url' sender.id %}" method="post">
+                    {% csrf_token %}
+                    <label class="w-100 text-white pt-1">
+                        Type Your Appointment Below*
+                        <textarea name="message" rows="5" cols="1" class="form-control mt-1"></textarea>
+                    </label>
+                    <input class="btn btn-success" type="submit" value="Send">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="card w-75 m-auto">
+        <div class="card-header">
+            <p>Recent Appointments</p>
+        </div>
+        <div class="card-body">
+            {% if appointments %}
+                {% for appointment in appointments %}
+                    {% if appointment.is_read %}
+                        <div class="m-1 p-1 bg-primary" style="border: 1px solid black; border-radius: 10px">
+                            <p class="text-success text-center font-weight-bolder bg-white">Read (Success!)</p>
+                            <p><a class="btn btn-link text-white font-weight-bolder" href="">Send Date: {{ appointment.updated.date }}</a></p>
+                            <p><a class="btn btn-link text-white font-weight-bolder" href="">Send Time: {{ appointment.updated.time }}</a></p>
+                            <p class="p-2 font-weight-bolder justify-content-start" style="background-color: rgba(0,0,0,0.85); border-radius: 10px">
+                                <a class="p1 text-white font-weight-bolder">{{ appointment.message }}</a>
+                            </p>
+                            <div class="">
+                                <p><a class="btn btn-link text-white font-weight-bolder" href="">Doctor's Reply</a></p>
+                                {% for reply in replies %}
+                                    {% if reply.appointment == appointment %}
+                                        <p class="p-2 font-weight-bolder justify-content-start" style="background-color: rgba(0,0,0,0.85); border-radius: 10px">
+                                            <a class="p1 text-white font-weight-bolder">{{ reply.message }}</a>
+                                        </p>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="m-1 p-1 bg-secondary" style="border: 1px solid black; border-radius: 10px">
+                            <p class="text-danger text-center">Not Read (Waiting!)</p>
+                            <p><a class="btn btn-link text-white font-weight-bolder" href="">Send Date: {{ appointment.updated.date }}</a></p>
+                            <p><a class="btn btn-link text-white font-weight-bolder" href="">Send Time: {{ appointment.updated.time }}</a></p>
+                            <p class="p-2 font-weight-bolder justify-content-start" style="background-color: rgba(0,0,0,0.85); border-radius: 10px">
+                                <a class="p1 text-white font-weight-bolder">{{ appointment.message }}</a>
+                            </p>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <p class="text-center text-dark p-2">No Appointments</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

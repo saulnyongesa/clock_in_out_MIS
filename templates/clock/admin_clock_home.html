@@ -1,0 +1,15 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <form action="{% url 'clock-url' %}" class="card p-4 login-form w-75 m-auto" method="post">
+        {% csrf_token %}
+        <div class="card-header">
+            <p class="text-center text-info">CLOCK IN/OUT</p>
+        </div>
+        <label class="w-100">
+            Enter PF Number* <br>
+            <input type="text" required name="pf-number" placeholder="Type PF Number" class="form-control">
+        </label>
+        <input class="form-control btn btn-primary"  type="submit" value="Validate">
+        <a class="text-center btn-link" href="{% url 'clock-face-url' %}">Use Face Detector</a>
+    </form>
+{% endblock %}

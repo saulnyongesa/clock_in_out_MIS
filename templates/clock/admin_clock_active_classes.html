@@ -1,0 +1,48 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    {% if clocks %}
+        <div class="d-flex">
+            <button onclick="downloadPDF('Active classes', '{{ clocks.count }}')" class="btn btn-link w-25 m-auto">Download</button></div>
+        <div class="card border w-75 m-auto" id="clock">
+            <div class="card-header bg-dark">
+                <p class="text-center text-white text-uppercase font-weight-bolder">ACTIVE CLASSES ({{ clocks.count }})</p>
+            </div>
+            <table class="card-body table table-hover table-bordered">
+                <thead>
+                <tr>
+                    <td class="font-weight-bolder">Trainer Name</td>
+                    <td class="font-weight-bolder">Trainer PF Number</td>
+                    <td class="font-weight-bolder">Unit Name</td>
+                    <td class="font-weight-bolder">Unit Code</td>
+                    <td class="font-weight-bolder">Class Date</td>
+                    <td class="font-weight-bolder">Clock In</td>
+                    <td class="font-weight-bolder">Clock Out</td>
+                    <td class="font-weight-bolder">Duration</td>
+                </tr>
+                </thead>
+                <tbody>
+                {% for clock in clocks %}
+                    <tr>
+                        <td class="text-capitalize">{{ clock.trainer_unit.trainer.name }}</td>
+                        <td class="text-capitalize">{{ clock.trainer_unit.trainer.pf_number }}</td>
+                        <td class="text-capitalize">{{ clock.trainer_unit.unit.unit_name }}</td>
+                        <td>{{ clock.trainer_unit.unit.unit_code}}</td>
+                        <td>{{ clock.clock_in.date }}</td>
+                        <td>{{ clock.clock_in }}</td>
+                        {% if clock.clock_out_status %}
+                            <td>{{ clock.clock_out }}</td>
+                        {% else %}
+                            <td class="text-danger">
+                                Not Clocked Out
+                            </td>
+                        {% endif %}
+
+                        <td>{{ clock.time_taken}} Min</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+{% endblock %}

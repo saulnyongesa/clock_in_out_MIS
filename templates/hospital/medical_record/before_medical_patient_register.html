@@ -1,0 +1,26 @@
+{% extends 'hospital/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="card w-75 m-auto">
+        <div class="card-header">
+            <p class="text-center">Sorry!! No Details Marching Your Search</p>
+            <p class="text-center">If the Patient is Not Registered, Please proceed below to Register the Patient</p>
+            <p class="text-center">Or Try Again</p>
+        </div>
+        <div class="card-body">
+            <div class="m-1 p-1 bg-secondary" style="border: 1px solid black; border-radius: 10px">
+                <form action="{% url 'patient-type-url' %}" method="post">
+                    {% csrf_token %}
+                    <label class="w-100" for="">
+                        Are you a Student or Staff?*
+                        <select class="form-control" name="choice" id="sender_type">
+                            <option value="1">Yes I am a Student</option>
+                            <option value="0">Yes I am a Staff</option>
+                        </select>
+                    </label>
+                    <input class="btn btn-success" type="submit" value="Next">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

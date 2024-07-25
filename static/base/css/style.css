@@ -1,0 +1,66 @@
+*{
+    font-size: 100%;
+    color: black;
+}
+body{
+    background-color: rgb(255, 255, 255);
+    color: white;
+    height: 100vh;
+}
+.img-thumbnail{
+    position: absolute;
+    width: 8vh;
+    height: 8vh;
+    left: 1vh;
+    top: 1vh;
+}
+button, a{
+    font-size: 100%;
+}
+/* The entire scrollbar */
+::-webkit-scrollbar {
+    width: 12px; /* width of the scrollbar */
+    height: 12px; /* height of the scrollbar (horizontal) */
+}
+
+/* The scrollbar track (background) */
+::-webkit-scrollbar-track {
+    background: #fbe12e;
+    border-radius: 10px;
+}
+
+/* The scrollbar handle (thumb) */
+::-webkit-scrollbar-thumb {
+    background: rgba(80, 77, 77, 0.86);
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #201f1f;
+}
+
+.navigation-container{
+    min-height: 10vh;
+    background-color: #366388;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+.navigation-container .navbar{
+    padding-left: 10vh;
+}
+.content-container{
+    min-height: 80vh;
+    padding: 10px 20px;
+}
+.index-container .card{
+    margin: auto;
+}
+
+.footer-container{
+    min-height: 30vh;
+    background-color: #366388;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+

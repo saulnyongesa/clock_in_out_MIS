@@ -1,0 +1,71 @@
+{% extends 'hospital/medical_record/base.html' %}
+{% load crispy_forms_filters %}
+{% load static %}
+{% block medical_record %}
+    <div class="card-body card w-100 pb-5 overflow-auto" style="min-height: 70vh">
+        <div class="card-header w-100">
+            <p class="text-uppercase text-center">{{ patient.name }}'s Past Medical History</p>
+        </div>
+        <div class="card-body row" style="min-height: 60vh">
+            <div class="col-md-5 col-sm-12 ml-auto mr-auto card overflow-auto" style="height: 90vh">
+                <div class="card-header">
+                    <p class="text-center">Past Medical History</p>
+                </div>
+                <div class="card-body">
+                    {% if past_medical_records %}
+                        {% for date, past_medical_records in past_medical_records.items %}
+                            <div class="w-100 bg-dark p-1 m-1" style="border-radius: 10px">
+                                <p class="text-info text-center font-weight-bolder">{{ date }}</p>
+                                {% for pmh in past_medical_records %}
+                                    <p class="text-white text-left justify-content-start">Pretreatment: {{ pmh.pretreatment|slice:"2:-2" }}</p>
+                                    <p class="text-white text-left justify-content-start">Allergies: {{ pmh.allergies|slice:"2:-2" }}</p>
+                                    <p class="text-white text-left justify-content-start">Transfusion: {{ pmh.transfusion|slice:"2:-2" }}</p>
+                                    <p class="text-white text-left justify-content-start">Surgeries: {{ pmh.surgeries|slice:"2:-2" }}</p>
+                                    <p class="text-white text-left justify-content-start">Other Past Medical History: {{ pmh.others|slice:"2:-2" }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-center">No Past Medical Records</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-5 col-sm-12 ml-auto mr-auto card">
+                <div class="card-header">
+                    <p class="text-center">Add Past Medical History</p>
+                    <p class="text-center text-danger">Note: Indicate the dates where possible</p>
+                </div>
+                <form action="{% url 'medical-record-pmh-url' patient.id %}" method="post" class="card-body" id="vital-sign-form">
+                    {% csrf_token %}
+                    <div id="vital-signs-container">
+                        <div class="vital-sign-input">
+                            <label for="vital_sign_1" class="w-100">
+                                Pretreatment*
+                                <input class="form-control" required type="text" name="pretreatment" id="vital_sign_1" placeholder="E.g. She bought painkillers on 12 of july, 2023">
+                            </label>
+                            <label for="vital_sign_1" class="w-100">
+                                Allergies*
+                                <input class="form-control" required type="text" name="allergies" id="vital_sign_1">
+                            </label>
+                            <label for="vital_sign_1" class="w-100">
+                                Transfusion*
+                                <input class="form-control" required type="text" name="transfusion" id="vital_sign_1">
+                            </label>
+                            <label for="vital_sign_1" class="w-100">
+                                Surgeries*
+                                <input class="form-control" required type="text" name="surgeries" id="vital_sign_1">
+                            </label>
+                            <label for="vital_sign_1" class="w-100">
+                                Others:
+                                <textarea class="form-control" name="others" id="others" rows="3"></textarea>
+                            </label>
+                        </div>
+                    </div>
+                    <input class="form-control btn btn-success mt-3" type="submit" value="Save">
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

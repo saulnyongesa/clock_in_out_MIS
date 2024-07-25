@@ -1,0 +1,17 @@
+{% extends 'base/base.html' %}
+{% load crispy_forms_filters %}
+{% block content %}
+    <form class="card p-4 login-form">
+        <div>
+            <img src="../../static/media/" alt="" srcset="">
+        </div>
+        {% csrf_token %}
+        <div class="card-header">
+            <p class="text-center text-info text-capitalize">EDIT {{trainer.name}} DETAILS</p>
+        </div>
+        <div class="card-body">
+            {{ form|crispy }}
+            <input class="form-control btn btn-primary" type="submit" value="Save">
+        </div>
+    </form>
+{% endblock %}

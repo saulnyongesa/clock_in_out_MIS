@@ -1,0 +1,20 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+    <form action="{% url 'assign-trainer-to-unit-from-list-url' trainer.id %}" class="card p-4 login-form w-75 m-auto" method="post">
+        {% csrf_token %}
+        <div class="card-header">
+            <p class="text-center text-info">ASSIGN UNIT TO {{ trainer.name }}</p>
+        </div>
+        <label class="w-100">
+            Choose unit* <br>
+            <select class="form-control" name="unit_id" id="unit_id" required>
+                <option >Choose----</option>
+                {% for unit in units %}
+                    <option value="{{ unit.id }}">{{ unit.unit_name }} {{ unit.unit_code }}</option>
+                {% endfor %}
+            </select>
+        </label>
+        <input class="form-control btn btn-primary"  type="submit" value="Save">
+    </form>
+{% endblock %}

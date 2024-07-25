@@ -1,0 +1,69 @@
+{% extends 'hospital/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="card w-75 m-auto">
+        <div class="card-header">
+            <p>All Appointments</p>
+        </div>
+        <div class="card-body">
+            {% if appointments %}
+                {% for appointment in appointments %}
+                    {% if appointment.is_read %}
+                        <div class="m-1 p-1 bg-primary" style="border: 1px solid black; border-radius: 10px">
+                            {% for student in students %}
+                                {% if appointment.sender == student.registration_number %}
+                                    <p><a class="btn btn-link text-white font-weight-bolder" href="">{{ student.name }}</a></p>
+                                    <p><a class="btn btn-link text-white font-weight-bolder" href="">Send Date: {{ appointment.updated.date }}</a></p>
+                                    <p><a class="btn btn-link text-white font-weight-bolder" href="">Send Time: {{ appointment.updated.time }}</a></p>
+                                {% endif %}
+                            {% endfor %}
+                            {% for staff in staffs %}
+                                {% if appointment.sender == staff.id_number %}
+                                    <p><a class="btn btn-link text-white font-weight-bolder" href="">{{ staff.name }}</a></p>
+                                    <p><a class="btn btn-link text-white font-weight-bolder" href="">Send Date: {{ appointment.updated.date }}</a></p>
+                                    <p><a class="btn btn-link text-white font-weight-bolder" href="">Send Time: {{ appointment.updated.time }}</a></p>
+                                {% endif %}
+                            {% endfor %}
+                            <p class="p-2 font-weight-bolder justify-content-start" style="background-color: rgba(0,0,0,0.85); border-radius: 10px">
+                                <a class="p1 text-white font-weight-bolder">{{ appointment.message }}</a>
+                            </p>
+                            <div class="">
+                                <p><a class="btn btn-link text-white font-weight-bolder" href="">Your Reply</a></p>
+                                {% for reply in replies %}
+                                    {% if reply.appointment == appointment %}
+                                        <p class="p-2 font-weight-bolder justify-content-start" style="background-color: rgba(0,0,0,0.85); border-radius: 10px">
+                                            <a class="p1 text-white font-weight-bolder">{{ reply.message }}</a>
+                                        </p>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="m-1 p-1 bg-secondary" style="border: 1px solid black; border-radius: 10px">
+                            {% for student in students %}
+                                {% if appointment.sender == student.registration_number %}
+                                    <p><a class="btn btn-link text-white font-weight-bolder" href="">{{ student.name }}</a></p>
+                                    <p><a class="btn btn-link text-white font-weight-bolder" href="">Send Date: {{ appointment.updated.date }}</a></p>
+                                    <p><a class="btn btn-link text-white font-weight-bolder" href="">Send Time: {{ appointment.updated.time }}</a></p>
+                                {% endif %}
+                            {% endfor %}
+                            {% for staff in staffs %}
+                                {% if appointment.sender == staff.id_number %}
+                                    <p><a class="btn btn-link text-white font-weight-bolder" href="">{{ staff.name }}</a></p>
+                                    <p><a class="btn btn-link text-white font-weight-bolder" href="">Send Date: {{ appointment.updated.date }}</a></p>
+                                    <p><a class="btn btn-link text-white font-weight-bolder" href="">Send Time: {{ appointment.updated.time }}</a></p>
+                                {% endif %}
+                            {% endfor %}
+                            <p class="p-2 font-weight-bolder justify-content-start" style="background-color: rgba(0,0,0,0.85); border-radius: 10px">
+                                <a class="p1 text-white font-weight-bolder">{{ appointment.message }}</a>
+                            </p>
+                            <a href="{% url 'view-appointment-url' appointment.id %}" class="btn btn-info font-weight-bolder" >Reply</a>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <p class="text-center text-dark p-2">No Appointments</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

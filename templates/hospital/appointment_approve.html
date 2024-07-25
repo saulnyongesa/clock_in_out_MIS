@@ -1,0 +1,25 @@
+{% extends 'hospital/base.html' %}
+{% load static %}
+{% block content %}
+    <div class="card w-75 m-auto">
+        <div class="card-header">
+            <p>{{ sender.name }}'s Appointment</p>
+        </div>
+        <div class="card-body">
+            <div class="m-1 p-1 bg-secondary" style="border: 1px solid black; border-radius: 10px">
+                <p><a class="btn btn-link text-white font-weight-bolder" href="">Send Date: {{ appointment.updated.date }}</a></p>
+                <p><a class="btn btn-link text-white font-weight-bolder" href="">Send Time: {{ appointment.updated.time }}</a></p>
+                <p class="p-2 font-weight-bolder justify-content-start" style="background-color: rgba(0,0,0,0.85); border-radius: 10px">
+                    <a class="p1 text-white font-weight-bolder">{{ appointment.message }}</a>
+                </p>
+                <form action="{% url 'reply-appointment-url' appointment.id %}" method="post">
+                    {% csrf_token %}
+                    <label class="w-100">
+                        <textarea name="reply" rows="5" cols="1" class="form-control"></textarea>
+                    </label>
+                    <input class="btn btn-success" type="submit" value="Reply">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

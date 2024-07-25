@@ -1,0 +1,199 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="{% static 'sysimg/logo.jpeg' %}" type="image/jpeg">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'clock/style.css' %}">
+    <style>
+        /*SPINNER*/
+        .spinner {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            top: 50%;
+            width: 40px;
+            height: 40px;
+            margin: -20px 0 0 -20px; /* Center the spinner */
+            border: 30px solid rgba(162, 245, 8, 0.1);
+            border-radius: 50%;
+            border-top-color: #5334db;
+            animation: spin 1s infinite linear;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+    <title>Equip Teaching Attendance Register</title>
+</head>
+<body style="height: 100vh;">
+{#=============================Navigation start==============================#}
+<section class="navigation-container w-100">
+    <nav class="navbar navbar-expand-md">
+        <a class="navbar-brand" href="{% url 'home-url' %}">
+            <img src="{% static 'sysimg/logo.jpeg' %}" alt="" class="img-thumbnail">
+        </a>
+        <button class="bg-white navbar-toggler navbar-toggle" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <i class="w-100">
+                <img class="w-100" src="{% static 'media/sys/bar.svg' %}" alt="MENU">
+            </i>
+        </button>
+        <ul class="collapse navbar-collapse navbar-nav" id="collapsibleNavbar">
+            <li class="m-auto w-100 p-1 text-center">
+                <a href="{% url 'clock-face-url' %}"  class="btn btn-info w-100">Clock In/Out</a>
+            </li>
+        </ul>
+    </nav>
+</section>
+{# ====================================Navigation End ======================= #}
+
+{# =================================Content================================= #}
+<section class="container-fluid p-2" style="height: 100vh;">
+    {% for message in messages %}
+        <p class="alert alert-dismissible alert-info text-center w-100 p-2">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong  {% if message.tags %} class="{{ message.tags }} "{% endif %}>
+                {{ message }}
+            </strong>
+        </p>
+    {% endfor %}
+    <div class="dialog-box card" id="dialog-box">
+        <div class="card-body">
+            <p class="text-center" id="dialog-message"></p>
+        </div>
+        <div class="card-footer d-flex">
+            <button class="btn btn-primary w-25 m-auto" id="close-btn" onclick="closeDialog()">Next</button>
+            <button class="btn btn-danger w-50 m-auto" id="retry-btn" onclick="retryFunc()">Try Again</button>
+            <button class="btn btn-danger w-25 m-auto" id="cancel-btn" onclick="cancelDialog()">Cancel</button>
+        </div>
+    </div>
+    <div>
+        {% block content %}
+
+        {% endblock %}
+    </div>
+    <div class="spinner" id="spinner"></div>
+    <div  class="card w-50 m-auto imageHolder d-block" id="imageHolder">
+        <div class="card-header">
+            <p class="text-center text-white font-weight-bolder">Face Capture</p>
+        </div>
+        <div class="card card-img" id="camera-feed">
+        </div>
+        <div class="card-footer d-flex">
+            <button id="capture-button" class="btn btn-success m-auto w-50 p-3">Proceed</button>
+        </div>
+    </div>
+</section>
+{#Footer start==============================#}
+{% include 'footer.html' %}
+{#Footer end==============================#}
+
+<script>
+    const imageHolder = document.getElementById('imageHolder');
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            const video = document.createElement('video');
+            video.srcObject = stream;
+            video.play();
+            document.getElementById('camera-feed').appendChild(video);
+        })
+        .catch(err => {
+            console.error('Error accessing camera:', err);
+        });
+    let id_global;
+    document.getElementById('capture-button').addEventListener('click', () => {
+        const video = document.querySelector('video');
+        const canvas = document.createElement('canvas');
+        const spinner = document.getElementById('spinner');
+        const next = document.getElementById('close-btn');
+        const cancel = document.getElementById('cancel-btn');
+        const retry = document.getElementById('retry-btn');
+        const cb = document.getElementById('capture-button');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const context = canvas.getContext('2d');
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageData = canvas.toDataURL('image/jpeg');
+        cb.disabled = true
+        spinner.style.display = 'block'
+        fetch('/clock/teaching/clock/face-recognizer/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ image_data: imageData })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    dataReceiver(data.id)
+                    spinner.style.display = 'none'
+                    retry.style.display = 'none'
+                    showDialog('Success, Welcome ' + data.trainer_name);
+                } else {
+                    spinner.style.display = 'none'
+                    next.style.display = 'none'
+                    cancel.style.display = 'none'
+                    showDialog('Face Not Recognized! Please click Try Again Button');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                cancel.style.display = 'none'
+                next.style.display = 'none'
+                showDialog('An error occurred.');
+            });
+    });
+
+    function dataReceiver(id) {
+        id_global = id
+        return id
+    }
+    function dataSender() {
+        return id_global
+    }
+    // DIALOG BOX=================================================================
+    function showDialog(message) {
+        document.getElementById("dialog-message").innerText = message;
+        document.getElementById("dialog-box").style.display = "block";
+    }
+    function closeDialog() {
+        document.getElementById("dialog-box").style.display = "none";
+        window.location.href = '/clock/teaching/clock/after-face/' + dataSender()
+    }
+    function cancelDialog() {
+        window.location.href = '/clock/'
+    }
+    function retryFunc() {
+        window.location.href = '/clock/'
+    }
+
+    // Function to check screen width and update class
+    function updateClass() {
+        let width = screen.width;
+        if (width <= 768) { // Adjust the width according to your needs
+            imageHolder.classList.remove('w-25');
+            imageHolder.classList.add('w-50');
+        } else {
+            imageHolder.classList.remove('w-50');
+            imageHolder.classList.add('w-25');
+        }
+    }
+    // Call the function when the page loads and when the window is resized
+    window.onload = updateClass;
+    window.onresize = updateClass;
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+<script src="{% static 'clock/main.js' %}"></script>
+<script src="{% static 'bootstrap/js/jquery-3.4.0.js' %}"></script>
+<script src="{% static 'bootstrap/js/popper.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+<script src="https://cdn.webrtc-experiment.com/MediaStreamRecorder.js"></script>
+</body>
+</html>

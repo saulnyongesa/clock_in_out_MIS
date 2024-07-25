@@ -1,0 +1,14 @@
+{% extends 'hospital/base.html' %}
+{% load crispy_forms_filters %}
+{% block content %}
+    <form action="{% url 'student-self-signup-url' %}" method="post" class="card p-4 login-form" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="card-header">
+            <p class="text-center text-info">Enter Your Details Correctly</p>
+        </div>
+        <div class="card-body">
+            {{ form|crispy }}
+            <input class="form-control btn btn-success" type="submit" value="Save">
+        </div>
+    </form>
+{% endblock %}

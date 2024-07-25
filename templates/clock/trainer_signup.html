@@ -1,0 +1,14 @@
+{% extends 'base/base.html' %}
+{% load crispy_forms_filters %}
+{% block content %}
+    <form action="{% url 'trainer-signup-url' %}" method="post" enctype="multipart/form-data" class="card p-4 login-form">
+        {% csrf_token %}
+        <div class="card-header">
+            <p class="text-center text-info">ADD TRAINER</p>
+        </div>
+        <div class="card-body">
+            {{ form|crispy }}
+            <input class="form-control btn btn-primary" type="submit" value="Add">
+        </div>
+    </form>
+{% endblock %}

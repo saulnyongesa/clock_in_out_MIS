@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/custom.css' %}">
+    <link rel="stylesheet" href="{% static 'hospital/style.css' %}">
+    <title>Equip Clinic</title>
+</head>
+<body>
+{#Navigation start==============================#}
+<section class="navigation-container w-100">
+    <nav class="navbar navbar-expand-md">
+        <a class="navbar-brand" href="{% url 'hospital-dashboard-url' %}">
+            <img src="{% static 'sysimg/logo.jpeg' %}" alt="" class="img-thumbnail">
+        </a>
+        <button class="bg-white navbar-toggler navbar-toggle" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <i class="w-100">
+                <img class="w-100" src="{% static 'media/sys/bar.svg' %}" alt="MENU">
+            </i>
+        </button>
+        <ul class="collapse navbar-collapse navbar-nav" id="collapsibleNavbar">
+            {% if request.user.is_authenticated %}
+                <li class="m-auto w-100 p-2 text-center">
+                    <a href="{% url 'hospital-dashboard-url' %}"  class="btn btn-info w-100">Home</a>
+                </li>
+                <li class="nav-item dropdown md-auto w-100 p-2 text-center">
+                    <button class="dropdown-toggle btn btn-link text-light w-100" role="button" data-toggle="dropdown" aria-expanded="false">Patient</button>
+                    <div class="dropdown-menu">
+                        <a class="btn btn-link" href="{% url 'student-self-signup-url' %}">Register Student</a>
+                        <a class="btn btn-link" href="">Register Staff</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown md-auto w-100 p-2 text-center">
+                    <button class="dropdown-toggle btn btn-link text-light w-100" role="button" data-toggle="dropdown" aria-expanded="false">Appointments</button>
+                    <div class="dropdown-menu">
+                        <a class="btn btn-link" href="{% url 'active-appointments-url' %}">Active</a>
+                        <a class="btn btn-link" href="{% url 'all-appointments-url' %}">All</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown m-md-auto">
+                    <button class="dropdown-toggle btn btn-link text-light" role="button" data-toggle="dropdown" aria-expanded="false">{{ request.user.last_name }} {{ request.user.first_name }}</button>
+                    <div class="dropdown-menu">
+                        <a class="btn btn-link text-center" href="{% url 'user-hospital-details-url' %}">My Profile</a>
+                        <a class="btn btn-link text-center text-danger" href="{% url 'hospital-sign-out-url' %}">Sign Out</a>
+                    </div>
+                </li>
+            {% else %}
+                <li class="m-auto w-100 p-2 text-center">
+                    <a href="{% url 'hospital-dashboard-url' %}"  class="btn btn-info w-100">Home</a>
+                </li>
+                <li class="m-auto w-100 p-2 text-center">
+                    <a href="{% url 'hospital-sign-in-url' %}"  class="btn btn-info w-100">Login</a>
+                </li>
+            {% endif %}
+
+        </ul>
+    </nav>
+    <div class="welcome-container text-center pb-5">
+        {% if request.user.is_authenticated %}
+            <h1 class="w-100 text-white">Welcome!
+                <span class="text-success">{{ request.user.last_name }} {{ request.user.first_name }}!! </span>
+            </h1>
+            {% else %}
+            <h1 class="w-100 text-white">Welcome! MKU KITALE CLINIC</h1>
+        {% endif %}
+    </div>
+</section>
+{#Navigation end==============================#}
+{#Content Container start==============================#}
+<section class="content-container">
+    {#===============================Messages===================================#}
+    {% for message in messages %}
+        <p class="alert alert-dismissible alert-info text-center w-100 p-2">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong  {% if message.tags %} class="{{ message.tags }} "{% endif %}>
+                {{ message }}
+            </strong>
+        </p>
+    {% endfor %}
+    <div class="spinner" id="spinner-base"></div>{#=============spinner====================#}
+    {% block content %}
+
+    {% endblock %}
+</section>
+{#Content Container end==============================#}
+
+{#Footer start==============================#}
+{% include 'footer.html' %}
+{#Footer end==============================#}
+
+
+<script src="{% static 'bootstrap/js/jquery-3.4.0.js' %}"></script>
+<script src="{% static 'bootstrap/js/popper.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+</body>
+</html>

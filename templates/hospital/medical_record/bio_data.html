@@ -1,0 +1,26 @@
+{% extends 'hospital/medical_record/base.html' %}
+{% load crispy_forms_filters %}
+{% load static %}
+{% block medical_record %}
+	<div class="card-body card w-100 pb-5 overflow-auto" style="min-height: 70vh">
+      <div class="card-header w-100">
+          <p class="text-uppercase text-center">{{ patient.name }}'s Bio</p>
+          <p class="text-uppercase text-center">
+              Patient Type: 
+              {% if patient.registration_number %}
+              	<span class="text-info font-weight-bolder">The Patient Is A Student</span>
+                  {% else %}
+                  <span class="text-info font-weight-bolder">The Patient Is A Staff</span>
+              {% endif %} 
+          </p>
+      </div>
+      <div class="card-body row" style="min-height: 60vh">
+          <img class="card-img col-md-5 col-sm-12 h-75 ml-auto mr-auto" src="{% static 'media/' %}{{ patient.photo }}" alt="Photo">
+          <div class="col-md-5 col-sm-12 m-auto h-100 ">
+              <form action="">
+                  {{ form | crispy }}
+              </form>
+          </div>
+      </div>
+    </div>
+{% endblock %}

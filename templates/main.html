@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="{% static 'sysimg/logo.jpeg' %}" type="image/jpeg">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/custom.css' %}">
+    <link rel="stylesheet" href="{% static 'base/css/style.css' %}">
+    <title>Welcome to MKU Kitale</title>
+</head>
+<body>
+{#Navigation start==============================#}
+<section class="navigation-container w-100">
+    <nav class="navbar navbar-expand-md">
+        <a class="navbar-brand" href="{% url 'home-url' %}">
+            <img src="{% static 'sysimg/logo.jpeg' %}" alt="" class="img-thumbnail">
+        </a>
+        <button class="bg-white navbar-toggler navbar-toggle" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <i class="w-100">
+                <img class="w-100" src="{% static 'media/sys/bar.svg' %}" alt="MENU">
+            </i>
+        </button>
+        <ul class="collapse navbar-collapse navbar-nav" id="collapsibleNavbar">
+            {% if not request.user.is_authenticated %}
+                <li class="m-auto w-100 p-1 text-center">
+                    <a href="{% url 'sign-in-url' %}" id="login-btn" class="btn btn-info" >System Login</a>
+                </li>
+            {% endif %}
+            <li class="m-auto w-100 p-1 text-center">
+                <a href="{% url 'home-url' %}" id="home-btn" class="btn btn-link text-white">Home</a>
+            </li>
+            <li class="m-auto w-100 p-1 text-center">
+                <button id="contact-btn" class="btn btn-link text-white">Contacts</button>
+            </li>
+            <li class="m-auto w-100 p-1 text-center">
+                <button id="about-btn" class="btn btn-link text-white">About Us</button>
+            </li>
+            <li class="m-auto w-100 p-1 text-center">
+                <button id="help-btn" class="btn btn-link text-white">Help</button>
+            </li>
+            {% if request.user.is_authenticated %}
+                <li class="m-auto w-100 p-1 text-center d-flex">
+                    <a class="btn btn-success m-auto" href="/base/">Admin Dashboard</a>
+                </li>
+                <li class="m-auto w-100 p-1 text-center d-flex">
+                    <a class="btn btn-danger m-auto" href="{% url 'sign-out-url' %}">Sign out</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    <div class="welcome-container text-center pb-5">
+        <h1 class="w-100 text-white">Welcome!
+            {% if request.user.is_authenticated %}
+                <span class="text-success">{{ request.user.last_name }}, </span>
+            {% endif %}<br> Mount Kenya University Kitale Campus
+        </h1>
+        <div class="w-100 row">
+            <a href="/clock/" class="btn btn-primary m-auto col-sm-12 col-md-3">Visit Clock In/Out System</a>
+            <a href="/hospital/" class="btn btn-secondary m-auto col-sm-12 col-md-3">Visit Hospital Management System</a>
+        </div>
+    </div>
+</section>
+{#Navigation end==============================#}
+{#Content Container start==============================#}
+<section >
+    <div class="spinner" id="spinner-base"></div>{#=============spinner====================#}
+    <section  id="content-container demo" class="carousel slide content-container" data-ride="carousel">
+        <ul class="carousel-indicators">
+            <li data-target="#1" data-slide-to="0" class="active"></li>
+            <li data-target="#2" data-slide-to="1"></li>
+            <li data-target="#3" data-slide-to="2"></li>
+        </ul>
+        <!-- The slideshow -->
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img class="w-100 h-100" src="{% static 'sysimg/1.jpeg' %}" alt="Los Angeles">
+                <div class="carousel-caption">
+                    <h1 class="text-center font-weight-bolder" style="color: rgba(87, 5, 76, 0.815);">Equip Africa Institute</h1>
+                    <h3 class="text-capitalize font-weight-bolder">Promoting competence, Innovation and Excellence!</h3>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img class="w-100 h-100" src="{% static 'sysimg/2.jpeg' %}" alt="Chicago">
+                <div class="carousel-caption">
+                    <h1 class="text-center font-weight-bolder" style="color: rgba(87, 5, 76, 0.815);">Equip Africa Institute</h1>
+                    <h3 class="text-capitalize font-weight-bolder">Promoting competence, Innovation and Excellence!</h3>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img class="w-100 h-100" src="{% static 'sysimg/3.jpeg' %}" alt="New York">
+                <div class="carousel-caption">
+                    <h1 class="text-center font-weight-bolder" style="color: rgba(87, 5, 76, 0.815);">Equip Africa Institute</h1>
+                    <h3 class="text-capitalize font-weight-bolder">Promoting competence, Innovation and Excellence!</h3>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img class="w-100 h-100" src="{% static 'sysimg/4.jpeg' %}" alt="New York">
+                <div class="carousel-caption">
+                    <h1 class="text-center font-weight-bolder" style="color: rgba(87, 5, 76, 0.815);">Equip Africa Institute</h1>
+                    <h3 class="text-capitalize font-weight-bolder">Promoting competence, Innovation and Excellence!</h3>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img class="w-100 h-100" src="{% static 'sysimg/5.jpeg' %}" alt="New York">
+                <div class="carousel-caption">
+                    <h1 class="text-center font-weight-bolder" style="color: rgba(87, 5, 76, 0.815);">Equip Africa Institute</h1>
+                    <h3 class="text-capitalize font-weight-bolder">Promoting competence, Innovation and Excellence!</h3>
+                </div>
+            </div>
+        </div>
+        <!-- Left and right controls -->
+        <a class="carousel-control-prev" href="" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" href="" data-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </a>
+    </section>
+    {% block content %}
+
+    {% endblock %}
+</section>
+{#Content Container end==============================#}
+
+{#Footer start==============================#}
+{% include 'footer.html' %}
+{#Footer end==============================#}
+
+
+<script src="{% static 'base/js/script.js' %}"></script>
+<script src="{% static 'bootstrap/js/jquery-3.4.0.js' %}"></script>
+<script src="{% static 'bootstrap/js/popper.min.js' %}"></script>
+<script src="{% static 'bootstrap/js/bootstrap.js' %}"></script>
+</body>
+</html>

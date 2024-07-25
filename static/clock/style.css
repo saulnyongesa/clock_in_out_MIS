@@ -1,0 +1,90 @@
+
+body{
+    background-color: rgba(0, 0, 0, 0.73);
+    color: white;
+    height: 100vh;
+}
+.img-thumbnail{
+    position: absolute;
+    width: 8vh;
+    height: 8vh;
+    left: 1vh;
+    top: 1vh;
+}
+button, a{
+    font-size: 100%;
+}
+/* The entire scrollbar */
+::-webkit-scrollbar {
+    width: 12px; /* width of the scrollbar */
+    height: 12px; /* height of the scrollbar (horizontal) */
+}
+
+/* The scrollbar track (background) */
+::-webkit-scrollbar-track {
+    background: #fbe12e;
+    border-radius: 10px;
+}
+
+/* The scrollbar handle (thumb) */
+::-webkit-scrollbar-thumb {
+    background: rgba(80, 77, 77, 0.86);
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #201f1f;
+}
+
+.navigation-container{
+    min-height: 10vh;
+    background-color: #366388;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+.navigation-container .navbar{
+    padding-left: 10vh;
+}
+.content-container{
+    height: 100vh;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+.footer-container{
+    min-height: 30vh;
+    background-color: #366388;
+    padding-right: 20px;
+    padding-left: 20px;
+}
+
+/*MESSAGES=======================================*/
+.error{
+    color: red;
+}
+.success{
+    color: green;
+}
+.dialog-box{
+    display: none;
+    position: absolute;
+    width: 50vw;
+    left: 25vw;
+    top: 5vh;
+    background-color: black;
+    color: white;
+    padding: 20px;
+    box-shadow: 0 20px 40px rgb(14, 13, 13);
+    z-index: 1000;
+}
+.imageHolder{
+    background-color: #366388;
+}
+.clock-form{
+    position: absolute;
+    width: 80vw;
+    left: 10vw;
+    background-color: rgba(0, 0, 0, 0.93);
+    box-shadow: 0 20px 40px rgb(14, 13, 13);
+    z-index: 1000;
+}

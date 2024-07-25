@@ -1,0 +1,14 @@
+{% extends 'base/base.html' %}
+{% load crispy_forms_filters %}
+{% block content %}
+    <form action="{% url 'unit-edit-url' unit.id %}" method="post" class="card p-4 login-form">
+        {% csrf_token %}
+        <div class="card-header">
+            <p class="text-center text-info">EDIT UNIT </p>
+        </div>
+        <div class="card-body">
+            {{ form|crispy }}
+            <input class="form-control btn btn-primary" type="submit" value="Save">
+        </div>
+    </form>
+{% endblock %}

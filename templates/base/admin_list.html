@@ -1,0 +1,139 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+    <form action="{% url 'admin-list-url' %}" class="card p-4 login-form w-75 m-auto" method="post">
+        {% csrf_token %}
+        <div class="card-header">
+            <p class="text-center text-info">ADMINS</p>
+        </div>
+        <label class="w-100">
+            <select class="form-control" name="choice" id="choice" required>
+                {% if list_choice == 0 %}
+                    <option value="">All Admins</option>
+                    <option value="1">Active Admins</option>
+                    <option value="2">Inactive Admins</option>
+                {% elif list_choice == 1 %}
+                    <option value="1">Active Admins</option>
+                    <option value="0">All Admins</option>
+                    <option value="2">Inactive Admins</option>
+                {% elif list_choice == 1 %}
+                    <option value="2">Inactive Admins</option>
+                    <option value="0">All Admins</option>
+                    <option value="1">Active Admins</option>
+                {% else %}
+                    <option value="0">All Admins</option>
+                    <option value="1">Active Admins</option>
+                    <option value="2">Inactive Admins</option>
+                {% endif %}
+            </select>
+        </label>
+        <input class="form-control btn btn-primary"  type="submit" value="Generate">
+    </form>
+    <div class="p-3 w-100">
+
+    </div>
+    {% if users %}
+        <div class="d-flex">
+            <button onclick="downloadPDF('mku-kitale-admin-list', '')" class="btn btn-link w-25 m-auto">Download PDF</button>
+        </div>
+        <div class="card border w-100 m-auto" id="clock">
+            <div class="card-header bg-dark d-block">
+                <div class="w-100 d-flex">
+                    <img class="w-50 m-auto" src="{% static 'sysimg/logo.png' %}" alt="">
+                </div>
+                <p class="text-center text-white text-uppercase font-weight-bolder">ADMINS LIST</p>
+            </div>
+            <table class="card-body table table-bordered table-striped-custom">
+                <thead>
+                <tr>
+                    <td class="font-weight-bolder">Name</td>
+                    <td class="font-weight-bolder">PF Number</td>
+                    <td class="font-weight-bolder">Phone Number</td>
+                    <td class="font-weight-bolder">Email</td>
+                    <td class="font-weight-bolder">Username</td>
+                    <td class="font-weight-bolder">Department</td>
+                    <td class="font-weight-bolder">Status(Active/Inactive)</td>
+                    <td class="text-center">-----</td>
+                </tr>
+                </thead>
+                <tbody>
+                {#superuser details====================================#}
+                {% for user in users %}
+                    {% if user.is_superuser %}
+                        <tr class="" >
+                            <td class="text-capitalize">{{ user.last_name }} {{ user.first_name }} {{ user.second_name }}</td>
+                            <td class="text-capitalize">{{ user.pf_number}}</td>
+                            <td>{{ user.phone }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.username }}</td>
+                            <td class="text-capitalize d-block">
+                                {% if request.user == user and user.is_superuser %}
+                                    <p class="m-auto text-success bg-white h-100">Super Admin (You)</p>
+                                {% else %}
+                                    <p class="m-auto h-100">Super Admin</p>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="d-flex h-100 w-100 pt-1 pb-1">
+                                    {% if user.is_active %}
+                                        <p class="m-auto text-success font-weight-bolder" >Active</p>
+                                        <a class="m-auto btn btn-danger" href="{% url 'admin-status-url' user.id%}">Deactivate</a>
+                                    {% elif not user.is_active %}
+                                        <p class="m-auto text-dark font-weight-bolder" >Inactive</p>
+                                        <a class="m-auto btn btn-success" href="{% url 'admin-status-url' user.id%}">Activate</a>
+                                    {% endif %}
+
+                                </div>
+                            </td>
+                             <td>
+                               {% if request.user == user %}
+                                 <a class="m-auto btn-link" href="{% url 'user-details-url' %}">View</a>
+                               {% else   %}
+                                 <a class="m-auto btn-link" href="{% url 'other-user-details-url' user.id %}">View</a>
+                               {% endif %}
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                {#other admin details======================================================#}
+                {% for user in users %}
+                    {% if not user.is_superuser %}
+                        <tr class="" style="border: 2px solid black">
+                            <td class="text-capitalize">{{ user.last_name }} {{ user.first_name }} {{ user.second_name }}</td>
+                            <td class="text-capitalize">{{ user.pf_number}}</td>
+                            <td>{{ user.phone }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>{{ user.username }}</td>
+                            <td class="text-capitalize d-block align-content-start">
+                                {% if user.is_admission %}
+                                    <p class="m-auto">Admission admin</p>
+                                {% elif user.is_hospital %}
+                                    <p class="m-auto">Hospital admin</p>
+                                {% elif user.is_pharmacy %}
+                                    <p class="m-auto">Pharmacy admin</p>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="d-flex w-100 pt-1 pb-1">
+                                    {% if user.is_active %}
+                                        <p class="m-auto text-success font-weight-bolder" >Active</p>
+                                        <a class="m-auto btn btn-danger" href="{% url 'admin-status-url' user.id%}">Deactivate</a>
+                                    {% else %}
+                                        <p class="m-auto text-danger font-weight-bolder" >Inactive</p>
+                                        <a class="m-auto btn btn-success" href="{% url 'admin-status-url' user.id%}">Activate</a>
+                                    {% endif %}
+
+                                </div>
+                            </td>
+                            <td>
+                                <a class="m-auto btn-link" href="{% url 'other-user-details-url' user.id %}">View</a>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+{% endblock %}

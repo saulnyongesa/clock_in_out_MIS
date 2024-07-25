@@ -1,0 +1,82 @@
+{% extends 'hospital/medical_record/base.html' %}
+{% load crispy_forms_filters %}
+{% load static %}
+{% block medical_record %}
+    <div class="card-body card w-100 pb-5 overflow-auto" style="min-height: 70vh">
+        <div class="card-header w-100">
+            <p class="text-uppercase text-center">{{ patient.name }}'s Medical Diagnosis</p>
+        </div>
+        <div class="card-body row" style="min-height: 60vh">
+            <div class="col-md-5 col-sm-12 ml-auto mr-auto card overflow-auto" style="height: 90vh">
+                <div class="card-header">
+                    <p class="text-center">Past Medical Diagnosis</p>
+                </div>
+                <div class="card-body">
+                    {% if medical_diagnosis_records %}
+                        {% for date, medical_diagnosis_records in medical_diagnosis_records.items %}
+                            <div class="w-100 bg-dark p-1 m-1" style="border-radius: 10px">
+                                <p class="text-info text-center font-weight-bolder">{{ date }}</p>
+                                <hr class="w-100 font-weight-bolder bg-info">
+                                {% for diagnosis in medical_diagnosis_records %}
+                                    <p class="text-white text-left justify-content-start">{{ diagnosis.diagnosis }}</p>
+                                    <hr class="w-100 font-weight-bolder bg-white">
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-center">No Previous Medical Diagnosis</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12 ml-auto mr-auto card">
+                <div class="card-header">
+                    <p class="text-center">Add Today's Medical Diagnosis</p>
+                </div>
+                <form action="{% url 'medical-record-diagnosis-url' patient.id %}" method="post" class="card-body" id="vital-sign-form">
+                    {% csrf_token %}
+                    <div id="vital-signs-container">
+                        <div class="vital-sign-input">
+                            <label for="vital_sign_1" class="w-100">
+                                <input class="form-control" required type="text" name="vital_signs" id="vital_sign_1" placeholder="">
+                            </label>
+                        </div>
+                    </div>
+                    <a id="add-vital-sign" class="d-flex btn btn-secondary m-auto justify-content-center">
+                        <img src="{% static 'sysimg/plus.svg' %}" alt="">
+                        ADD
+                    </a>
+                    <input class="form-control btn btn-success mt-3" type="submit" value="Save">
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('add-vital-sign').addEventListener('click', function (e) {
+            e.preventDefault();
+
+            // Get the container where the vital sign inputs are
+            var container = document.getElementById('vital-signs-container');
+
+            // Get the current number of input fields
+            var inputCount = container.getElementsByClassName('vital-sign-input').length;
+
+            // Create a new input field
+            var newInputDiv = document.createElement('div');
+            newInputDiv.classList.add('vital-sign-input');
+
+            var newLabel = document.createElement('label');
+            newLabel.classList.add('w-100');
+
+            var newInput = document.createElement('input');
+            newInput.classList.add('form-control');
+            newInput.type = 'text';
+            newInput.name = 'vital_signs';
+            newInput.placeholder = 'Add New';
+            newInput.id = 'vital_sign_' + (inputCount + 1);
+
+            newLabel.appendChild(newInput);
+            newInputDiv.appendChild(newLabel);
+            container.appendChild(newInputDiv);
+        });
+    </script>
+{% endblock %}

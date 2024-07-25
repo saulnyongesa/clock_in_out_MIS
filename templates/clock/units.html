@@ -1,0 +1,43 @@
+{% extends 'base/base.html' %}
+{% block content %}
+    <div class="card w-100">
+        <div class="card-header">
+            <h4 class="text-center text-info">Units</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-responsive-sm table-hover">
+                <thead>
+                <tr>
+                    <th>Unit Name</th>
+                    <th>Unit Code</th>
+                    <th>Expected Hrs Per Class)</th>
+                    <th>Expected Hrs Per Week)</th>
+                    <th>Expected Hrs (Per Term</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if units %}
+                    {% for unit in units %}
+                        <tr>
+                            <td>{{ unit.unit_name }}</td>
+                            <td>{{ unit.unit_code }}</td>
+                            <td>{{ unit.teaching_hrs_per_class }}</td>
+                            <td>{{ unit.teaching_hrs_week }}</td>
+                            <td>{{ unit.teaching_hrs_term }}</td>
+                        <td class="d-flex">
+                            <a href="{% url 'unit-edit-url' unit.id %}" class="btn btn-primary m-auto">Edit</a>
+                        </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="4" class="text-center">
+                            No Units Found
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

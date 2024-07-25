@@ -1,0 +1,76 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% block content %}
+    <form action="{% url 'clock-history-url' %}" class="card p-4 login-form w-75 m-auto" method="post">
+        {% csrf_token %}
+        <div class="card-header">
+            <p class="text-center text-info">GENERATE TEACHING ATTENDANCE FOR TRAINER</p>
+        </div>
+        <div class="row">
+            <label class="col-sm-12 col-md-6 col-lg-6">
+                FROM* <br>
+                <input type="date" required name="date1" placeholder="Type PF Number" class="form-control">
+            </label>
+            <label class="col-sm-12 col-md-6 col-lg-6">
+                TO* <br>
+                <input type="date" required name="date2" placeholder="Type PF Number" class="form-control">
+            </label>
+        </div>
+
+        <label class="w-100">
+            Enter PF Number* <br>
+            <input type="text" required name="pf-number" placeholder="Type PF Number" class="form-control">
+        </label>
+        <input class="form-control btn btn-primary"  type="submit" value="Generate">
+    </form>
+    <div class="p-3 w-100">
+
+    </div>
+    {% if clocks %}
+        <div class="d-flex">
+            <button onclick="downloadPDF('{{ trainer.name }}', '{{ trainer.pf_number }}')" class="btn btn-link w-25 m-auto">Download as PDF</button>
+            <a class="btn btn-link w-25 m-auto" href="{% url 'generate-excel-url' trainer.id %}">Download Excel</a>
+        </div>
+        <div class="card border w-75 m-auto" id="clock">
+            <div class="card-header bg-dark">
+                <div class="w-100 d-flex">
+                    <img class="w-50 m-auto" src="{% static 'sysimg/logo.png' %}" alt="">
+                </div>
+                <p class="text-center text-white text-uppercase font-weight-bolder">TEACHING ATTENDANCE HISTORY</p>
+                <p class="text-left text-white text-uppercase font-weight-bolder">FROM <span class="text-danger">{{ start.date }}</span> TO <span class="text-danger">{{ end.date }}</span></p>
+                <p class="text-left text-white text-uppercase font-weight-bolder">TRAINER NAME: {{ trainer.name }}</p>
+                <p class="text-left text-white text-uppercase font-weight-bolder">PF NUMBER: {{ trainer.pf_number }}</p>
+            </div>
+            <table class="card-body table table-hover table-bordered">
+                <thead>
+                <tr>
+                    <td class="font-weight-bolder">Unit Name</td>
+                    <td class="font-weight-bolder">Unit Code</td>
+                    <td class="font-weight-bolder">Class Date</td>
+                    <td class="font-weight-bolder">Clock In</td>
+                    <td class="font-weight-bolder">Clock Out</td>
+                    <td class="font-weight-bolder">Duration</td>
+                </tr>
+                </thead>
+                <tbody>
+                {% for clock in clocks %}
+                    <tr>
+                        <td class="text-capitalize">{{ clock.trainer_unit.unit.unit_name }}</td>
+                        <td>{{ clock.trainer_unit.unit.unit_code}}</td>
+                        <td>{{ clock.clock_in.date }}</td>
+                        <td>{{ clock.clock_in }}</td>
+                        {% if clock.clock_out_status %}
+                            <td>{{ clock.clock_out }}</td>
+                        {% else %}
+                            <td class="text-danger">Not Clocked Out</td>
+                        {% endif %}
+
+                        <td>{{ clock.time_taken}} Min</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
+{% endblock %}

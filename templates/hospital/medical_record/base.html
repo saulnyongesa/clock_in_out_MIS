@@ -1,0 +1,73 @@
+{% extends 'hospital/base.html' %}
+{% block content %}
+    <style>
+        .medical-record-nav ul li{
+            height: 100%;
+        }
+        .medical-record-nav ul li a {
+            font-size: 9px;
+            font-weight: bolder;
+            height: 100%;
+            text-align: center;
+        }
+        .medical-record-nav {
+            overflow-x: auto;
+        }
+        .medical-record-nav ul {
+            width: 10vw;
+        }
+        .medical-record-nav ul li {
+            flex: 0 0 auto; /* Prevent items from shrinking */
+            width: 10px; /* Set a fixed width for items */
+        }
+        .medical-record-nav ul li a {
+            display: block; /* Ensure links take full item width */
+        }
+    </style>
+
+    <div class="container-fluid card">
+        <div class="card-header">
+            <p class="text-center text-dark font-weight-bolder text-uppercase">{{ patient.name }} MEDICAL RECORD</p>
+            <nav class="medical-record-nav d-flex p-2 m-auto " style="width: 90vw; border-radius: 10px">
+                <ul class="list-unstyled d-flex ">
+                    <li class="w-100 p-1 m-auto">
+                        <a href="{% url 'medical-record-bio-url' patient.id %}" class="btn btn-primary w-100">Bio Data</a>
+                    </li>
+                    <li class="w-100 p-1 m-auto">
+                        <a href="{% url 'medical-record-vital-signs-url' patient.id %}" class="btn btn-primary w-100">Vital Signs</a>
+                    </li>
+                    <li class="w-100 p-1 m-auto">
+                        <a href="{% url 'medical-record-complains-url' patient.id %}" class="btn btn-primary w-100">Chief Complaints</a>
+                    </li>
+                    <li class="w-100 p-1 m-auto">
+                        <a href="{% url 'medical-record-hpi-url' patient.id %}" class="btn btn-primary w-100">HPI</a>
+                    </li>
+                    <li class="w-100 p-1 m-auto">
+                        <a href="{% url 'medical-record-pmh-url' patient.id %}" class="btn btn-primary w-100">Past Medical History</a>
+                    </li>
+                    <li class="w-100 p-1 m-auto">
+                        <a href="{% url 'medical-record-fmh-url' patient.id %}" class="btn btn-primary w-100">Family Medical History</a>
+                    </li>
+                    <li class="w-100 p-1 m-auto">
+                        <a href="{% url 'medical-record-examination-url' patient.id %}" class="btn btn-primary w-100">Examination</a>
+                    </li>
+                    <li class="w-100 p-1 m-auto">
+                        <a href="{% url 'medical-record-diagnosis-url' patient.id %}" class="btn btn-primary w-100">Diagnosis</a>
+                    </li>
+                    <li class="w-100 p-1 m-auto">
+                        <a href="{% url 'medical-record-findings-url' patient.id %}" class="btn btn-primary w-100">Findings</a>
+                    </li>
+                    <li class="w-100 p-1 m-auto">
+                        <a href="{% url 'medical-record-treatment-url' patient.id %}" class="btn btn-primary w-100">Treatment</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="card-body" style="min-height: 100vh">
+            {% block medical_record %}
+
+
+            {% endblock %}
+        </div>
+    </div>
+{% endblock %}
